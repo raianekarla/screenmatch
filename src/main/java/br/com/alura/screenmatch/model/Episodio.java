@@ -1,16 +1,25 @@
 package br.com.alura.screenmatch.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.persistence.*;
+import org.springframework.aot.generate.GeneratedTypeReference;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "Episodio")
 public class Episodio {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Integer temporada;
     private String titulo;
     private Integer numero;
     private Double avaliacao;
     private LocalDate dataLancamento;
+    @ManyToOne
+    private Serie serie;
 
     public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
         this.temporada = numeroTemporada;
@@ -19,7 +28,7 @@ public class Episodio {
 
         try {
             this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());
-        } catch (NumberFormatException exception){
+        } catch (NumberFormatException exception) {
             this.avaliacao = 0.0;
         }
 
@@ -28,6 +37,25 @@ public class Episodio {
         } catch (DateTimeException exception) {
             this.dataLancamento = null;
         }
+    }
+
+    public Episodio() {
+    }
+
+    public Serie getSerie() {
+        return serie;
+    }
+
+    public void setSerie(Serie serie) {
+        this.serie = serie;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitulo() {
